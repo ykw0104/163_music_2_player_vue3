@@ -22,7 +22,7 @@ export default defineComponent({
 
     /* 请求歌手的歌曲列表 */
     axios.get("http://localhost:3000/artists?id=7424").then((res) => {
-      // 获取需要的数据
+      // 请求歌手的歌曲列表的数据
       dataSource.value = res.data.hotSongs.map((item) => {
         return {
           id: item.id,

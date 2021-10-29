@@ -149,7 +149,7 @@ export default defineComponent({
 
   .middle {
     position: absolute;
-    top: 10%;
+    top: 120px;
     left: 0;
     right: 0;
     width: 80%;
