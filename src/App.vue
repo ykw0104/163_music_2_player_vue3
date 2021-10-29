@@ -1,15 +1,56 @@
 <template>
-  <div>222</div>
+  <div id="nav-app">
+    <!-- 歌手的歌曲列表 -->
+    <song-list-page :data="dataSource"></song-list-page>
+    <player></player>
+  </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
+import Player from "@/player/index";
+import SongListPage from "./SongListPage.vue";
+
+import axios from "axios";
 
 export default defineComponent({
+  components: { SongListPage, Player },
   setup() {
-    return {};
+    const dataSource = ref([]);
+
+    /* 请求歌手的歌曲列表 */
+    axios.get("http://localhost:3000/artists?id=7424").then((res) => {
+      // 获取需要的数据
+      dataSource.value = res.data.hotSongs.map((item) => {
+        return {
+          id: item.id,
+          name: item.name,
+          // ar: item.ar,
+          ar: item.ar.map((arItem) => arItem.name).join("/"), // 歌手列表
+          al: {
+            name: item.al.name,
+            picUrl: item.al.picUrl,
+          },
+        };
+      });
+    });
+    return {
+      dataSource,
+    };
   },
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+* {
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body,
+#nav-app {
+  width: 100%;
+  height: 100%;
+}
+</style>
