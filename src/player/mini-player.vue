@@ -59,16 +59,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@keyframes imgRotate {
-  0% {
-    transform: rotate(0);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .mini-play-container {
   position: fixed;
   left: 0;

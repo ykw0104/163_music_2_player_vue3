@@ -1,5 +1,5 @@
 <template>
-  <div class="song-list page">
+  <div class="song-list-page">
     <ul>
       <li
         class="item"
@@ -42,6 +42,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.song-list-page {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
 .item {
   display: flex;
   padding: 10px;

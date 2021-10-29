@@ -2,6 +2,8 @@
   <div id="nav-app">
     <!-- 歌手的歌曲列表 -->
     <song-list-page :data="dataSource"></song-list-page>
+
+    <!-- 播放器 -->
     <player></player>
   </div>
 </template>
@@ -42,6 +44,16 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@keyframes imgRotate {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 * {
   padding: 0;
   margin: 0;
