@@ -16,11 +16,8 @@
 
     <!-- 播放/暂停 -->
     <div class="control">
-      <!-- <i class="iconfont icon-triangle-play"></i> -->
-      <i
-        class="iconfont"
-        :class="{ 'icon-triangle-play': !play, 'icon-weibiaoti519': play }"
-      ></i>
+      <!-- 双向绑定play的值 -->
+      <circle-progress v-model="play" :progress="progress"></circle-progress>
     </div>
 
     <!-- 歌曲列表 -->
@@ -32,11 +29,15 @@
 
 <script>
 import { defineComponent, ref } from "vue";
+import CircleProgress from "./children/circle-progress.vue";
 
 export default defineComponent({
+  components: { CircleProgress },
   setup() {
-    // 是否播放
-    const play = ref(false);
+    // 是否播放(播放/暂停)
+    const play = ref(true);
+    // 歌曲播放进度
+    const progress = ref(0.2);
 
     // 当前歌曲信息
     const currentSong = ref({
@@ -53,6 +54,7 @@ export default defineComponent({
     return {
       play,
       currentSong,
+      progress,
     };
   },
 });

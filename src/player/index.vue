@@ -5,7 +5,7 @@
     <mini-player></mini-player>
 
     <!-- 全屏大播放器 -->
-    <normal-player></normal-player>
+    <!-- <normal-player></normal-player> -->
   </div>
 </template>
 

@@ -1,19 +1,21 @@
-# vue_p2
+### 歌曲图片的旋转在 App 里设置了动画: @keyframes imgRotate
 
-## Project setup
 ```
-npm install
-```
+img {
+        /* 旋转 */
+        animation: imgRotate 10s linear infinite;
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
+        /* 旋转暂停 */
+        &.pause {
+          animation-play-state: paused;
+        }
+      }
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 进度条 circle-progress
+
+```
+1. 环形进度条只能显示,不能修改进度
+2. 条形进度条可以修改进度
+3. 使用canvas制作
+```
