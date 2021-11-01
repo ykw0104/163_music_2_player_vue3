@@ -2,10 +2,10 @@
 <template>
   <div class="player-wrap">
     <!-- 底部小播放器 -->
-    <mini-player></mini-player>
+    <!-- <mini-player></mini-player> -->
 
     <!-- 全屏大播放器 -->
-    <!-- <normal-player></normal-player> -->
+    <normal-player></normal-player>
   </div>
 </template>
 

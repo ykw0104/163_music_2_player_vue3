@@ -16,7 +16,7 @@
 
     <!-- 播放/暂停 -->
     <div class="control">
-      <!-- 双向绑定play的值 -->
+      <!-- 环形进度条 双向绑定play的值 -->
       <circle-progress v-model="play" :progress="progress"></circle-progress>
     </div>
 

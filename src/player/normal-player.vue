@@ -31,6 +31,9 @@
 
     <!-- 底部操作按键 -->
     <div class="bottom">
+      <!-- 条形进度条 -->
+      <bar-progress v-model="progress" />
+
       <div class="operators">
         <div class="icon i-left">
           <i class="iconfont icon-xunhuan"></i>
@@ -54,10 +57,15 @@
 
 <script>
 import { defineComponent, ref } from "vue";
+import BarProgress from "@/player/children/bar-progress.vue";
 
 export default defineComponent({
+  components: {
+    BarProgress,
+  },
   setup() {
     const play = ref(true);
+    const progress = ref(0.7); // 进度条进度
 
     // 当前歌曲信息
     const currentSong = ref({
@@ -73,6 +81,7 @@ export default defineComponent({
 
     return {
       play,
+      progress,
       currentSong,
     };
   },
