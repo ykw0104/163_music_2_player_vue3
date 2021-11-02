@@ -44,6 +44,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+/* 专辑图片的旋转特效 */
 @keyframes imgRotate {
   0% {
     transform: rotate(0);

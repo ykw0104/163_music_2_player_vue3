@@ -6,7 +6,7 @@
         class="item"
         v-for="(item, index) in data"
         :key="item.id"
-        @click="songClickAction(item)"
+        @click="songClickAction(index)"
       >
         <p class="index">{{ index + 1 }}</p>
         <div class="content">
@@ -26,14 +26,22 @@
 
 <script>
 import { defineComponent } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   props: {
     data: Array,
   },
-  setup() {
-    const songClickAction = (item) => {
-      console.log(JSON.stringify(item));
+  setup(props) {
+    const store = useStore();
+
+    const songClickAction = (index) => {
+      // 将用户点击的歌曲列表下标和当前列表传递给store
+      store.commit({
+        type: "player/selectSongByIdex",
+        index, // 下标
+        list: props.data, // 歌曲列表
+      });
     };
     return {
       songClickAction,

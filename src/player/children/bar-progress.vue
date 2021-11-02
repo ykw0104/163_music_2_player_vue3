@@ -2,7 +2,7 @@
 <template>
   <div class="bar-progress">
     <span class="text">00:00</span>
-    <div ref="barRef" class="bar">
+    <div ref="barRef" class="bar" :style="{ backgroundImage: backgroudStyle }">
       <span ref="iconRef" class="icon"></span>
     </div>
     <span class="text">04:00</span>
@@ -10,7 +10,14 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted, watch, nextTick } from "vue";
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  watch,
+  nextTick,
+  computed,
+} from "vue";
 
 export default defineComponent({
   props: {
@@ -64,6 +71,14 @@ export default defineComponent({
       });
     });
 
+    /* 根据modelValue的变化修改背景线性渐变效果 */
+    /* 条形进度条左右两边的颜色 */
+    const backgroudStyle = computed(() => {
+      const percent = props.modelValue * 100;
+
+      return `linear-gradient(to right, #d44439 0%, #d44439 ${percent}%, grey ${percent}%, grey 100%)`;
+    });
+
     watch(
       () => props.modelValue,
       (newValue) => {
@@ -80,6 +95,7 @@ export default defineComponent({
     return {
       barRef,
       iconRef,
+      backgroudStyle,
     };
   },
 });
@@ -109,7 +125,7 @@ export default defineComponent({
       height: 12px;
       border: 3px solid #fff;
       border-radius: 50%;
-      background-color: red;
+      background-color: #d44439;
 
       &::before {
         content: "";

@@ -32,8 +32,8 @@ export default defineComponent({
 
     onMounted(() => {
       // 设置画布
-      canvasRef.value.width = 30;
-      canvasRef.value.height = 30;
+      canvasRef.value.width = 60;
+      canvasRef.value.height = 60;
       // 获取画布上下文
       context.value = canvasRef.value.getContext("2d");
 
@@ -55,22 +55,22 @@ export default defineComponent({
     /* 绘制播放器的环形进度条*/
     const renderAction = () => {
       // 清除上一次的绘制
-      context.value.clearRect(0, 0, 30, 30);
+      context.value.clearRect(0, 0, 60, 60);
 
       // 1. 绘制整个圆环
       context.value.save();
       context.value.beginPath();
 
       // 绘制大圆
-      context.value.moveTo(15, 15);
+      context.value.moveTo(30, 30);
       // 角度转弧度 : π/180*角度
-      context.value.arc(15, 15, 14, 0, 2 * Math.PI * 2, false);
-      context.value.lineTo(15, 15);
+      context.value.arc(30, 30, 30, 0, 2 * Math.PI * 2, false);
+      context.value.lineTo(30, 30);
 
       // 绘制小圆
-      context.value.moveTo(15, 15);
-      context.value.arc(15, 15, 12, 0, 2 * Math.PI * 2, false);
-      context.value.lineTo(15, 15);
+      context.value.moveTo(30, 30);
+      context.value.arc(30, 30, 24, 0, 2 * Math.PI * 2, false);
+      context.value.lineTo(30, 30);
 
       context.value.closePath();
       context.value.fillStyle = "rgba(212,68,57,0.3)";
@@ -82,18 +82,18 @@ export default defineComponent({
       context.value.beginPath();
 
       // 绘制大弧
-      context.value.moveTo(15, 15);
+      context.value.moveTo(30, 30);
       // 角度转弧度 : π/180*角度
       // 位置设置在12点钟方向, 默认是3点钟方向
       const startAng = (Math.PI / 180) * -90;
       const endAng = startAng + (Math.PI / 180) * 360 * props.progress;
-      context.value.arc(15, 15, 14, startAng, endAng, false);
-      context.value.lineTo(15, 15);
+      context.value.arc(30, 30, 30, startAng, endAng, false);
+      context.value.lineTo(30, 30);
 
       // 绘制小弧
-      context.value.moveTo(15, 15);
-      context.value.arc(15, 15, 12, startAng, endAng, false);
-      context.value.lineTo(15, 15);
+      context.value.moveTo(30, 30);
+      context.value.arc(30, 30, 24, startAng, endAng, false);
+      context.value.lineTo(30, 30);
 
       context.value.closePath();
       context.value.fillStyle = "rgba(212,68,57,1)";
@@ -127,6 +127,8 @@ export default defineComponent({
     position: absolute;
     top: 0;
     left: 0;
+    width: 100%;
+    height: 100%;
   }
 }
 </style>
