@@ -4,7 +4,7 @@
     <!-- 专辑图片 -->
     <div class="icon">
       <div class="img-wrapper">
-        <img :class="{ pause: !play }" :src="currentSong.al.picUrl" alt="" />
+        <img :class="{ pause: !playing }" :src="currentSong.al.picUrl" alt="" />
       </div>
     </div>
 
@@ -17,7 +17,11 @@
     <!-- 播放/暂停 -->
     <div class="control">
       <!-- 环形进度条 双向绑定play的值 -->
-      <circle-progress v-model="play" :progress="progress"></circle-progress>
+      <circle-progress
+        :modelValue="playing"
+        @update:modelValue="changePlayingAction"
+        :progress="progress"
+      />
     </div>
 
     <!-- 歌曲列表 -->
@@ -28,33 +32,43 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
+import { useStore } from "vuex";
+
 import CircleProgress from "./children/circle-progress.vue";
 
 export default defineComponent({
   components: { CircleProgress },
+  props: {
+    progress: Number, // 歌曲播放进度
+  },
   setup() {
-    // 是否播放(播放/暂停)
-    const play = ref(true);
-    // 歌曲播放进度
-    const progress = ref(0.2);
+    const store = useStore();
+    const playing = computed(() => store.state.player.playing); // 是否播放(播放/暂停)
+    const currentSong = computed(() => store.getters["player/currentSong"]); // 当前播放歌曲
 
     // 当前歌曲信息
-    const currentSong = ref({
-      id: 1812673579,
-      name: "等你归来",
-      ar: "程响",
-      al: {
-        name: "等你归来",
-        picUrl:
-          "https://p1.music.126.net/bisOFZHy6WuBBfaHtr238Q==/109951165674729204.jpg",
-      },
-    });
+    // const currentSong = ref({
+    //   id: 1812673579,
+    //   name: "等你归来",
+    //   ar: "程响",
+    //   al: {
+    //     name: "等你归来",
+    //     picUrl:
+    //       "https://p1.music.126.net/bisOFZHy6WuBBfaHtr238Q==/109951165674729204.jpg",
+    //   },
+    // });
 
+    /* ----------------------------------------------------------------------------------------------------- */
+    const changePlayingAction = (value) => {
+      store.commit("player/setPlaying", value);
+    };
+    /* ----------------------------------------------------------------------------------------------------- */
     return {
-      play,
+      playing,
       currentSong,
-      progress,
+
+      changePlayingAction,
     };
   },
 });

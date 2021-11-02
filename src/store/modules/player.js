@@ -47,6 +47,11 @@ export default {
       // 播放音乐
       state.playing = true;
     },
+
+    /* 修改播放状态 */
+    setPlaying(state, playingValue) {
+      state.playing = playingValue;
+    },
   },
   actions: {},
 };

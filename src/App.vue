@@ -1,15 +1,17 @@
 <template>
   <div id="nav-app">
     <!-- 歌手的歌曲列表 -->
-    <song-list-page :data="dataSource"></song-list-page>
+    <song-list-page :data="dataSource" :class="{ hasPadding: showPlayer }" />
 
     <!-- 播放器 -->
-    <player></player>
+    <player v-if="showPlayer" />
   </div>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
+import { useStore } from "vuex";
+
 import Player from "@/player/index";
 import SongListPage from "./SongListPage.vue";
 
@@ -18,6 +20,9 @@ import axios from "axios";
 export default defineComponent({
   components: { SongListPage, Player },
   setup() {
+    const store = useStore();
+    const showPlayer = computed(() => store.state.player.currentIndex >= 0);
+
     const dataSource = ref([]);
 
     /* 请求歌手的歌曲列表 */
@@ -36,9 +41,7 @@ export default defineComponent({
         };
       });
     });
-    return {
-      dataSource,
-    };
+    return { showPlayer, dataSource };
   },
 });
 </script>
@@ -65,5 +68,9 @@ body,
 #nav-app {
   width: 100%;
   height: 100%;
+}
+
+.hasPadding {
+  padding-bottom: 60px;
 }
 </style>
