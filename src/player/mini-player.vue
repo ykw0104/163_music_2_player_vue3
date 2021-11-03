@@ -1,6 +1,6 @@
 /* 底部的小播放器 */
 <template>
-  <div class="mini-play-container">
+  <div class="mini-play-container" @click="enterFullScreenAction">
     <!-- 专辑图片 -->
     <div class="icon">
       <div class="img-wrapper">
@@ -15,7 +15,7 @@
     </div>
 
     <!-- 播放/暂停 -->
-    <div class="control">
+    <div class="control" @click.stop="">
       <!-- 环形进度条 双向绑定play的值 -->
       <circle-progress
         :modelValue="playing"
@@ -25,7 +25,7 @@
     </div>
 
     <!-- 歌曲列表 -->
-    <div class="control">
+    <div class="control" @click.stop="">
       <i class="iconfont icon-24gf-playlistMusic"></i>
     </div>
   </div>
@@ -63,12 +63,18 @@ export default defineComponent({
     const changePlayingAction = (value) => {
       store.commit("player/setPlaying", value);
     };
+
+    /* 进入全屏播放 */
+    const enterFullScreenAction = () => {
+      store.commit("player/setFullScreen", true);
+    };
     /* ----------------------------------------------------------------------------------------------------- */
     return {
       playing,
       currentSong,
 
       changePlayingAction,
+      enterFullScreenAction,
     };
   },
 });

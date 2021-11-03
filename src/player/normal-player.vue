@@ -10,7 +10,7 @@
 
     <!-- 顶部 -->
     <div class="top">
-      <div class="back">
+      <div class="back" @click="leaveFullScreenAction">
         <i class="iconfont icon-zuojiantou"></i>
       </div>
       <h1 class="title">{{ currentSong.name }}</h1>
@@ -22,7 +22,7 @@
       <div class="CD-wrapper">
         <img
           class="image"
-          :class="{ pause: !play }"
+          :class="{ pause: !playing }"
           :src="currentSong.al.picUrl"
           alt=""
         />
@@ -56,7 +56,8 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
+import { useStore } from "vuex";
 import BarProgress from "@/player/children/bar-progress.vue";
 
 export default defineComponent({
@@ -64,25 +65,33 @@ export default defineComponent({
     BarProgress,
   },
   setup() {
-    const play = ref(true);
+    const store = useStore();
+    const playing = computed(() => store.state.player.playing);
+    const currentSong = computed(() => store.getters["player/currentSong"]);
     const progress = ref(0.7); // 进度条进度
 
     // 当前歌曲信息
-    const currentSong = ref({
-      id: 1812673579,
-      name: "等你归来",
-      ar: "程响",
-      al: {
-        name: "等你归来",
-        picUrl:
-          "https://p1.music.126.net/bisOFZHy6WuBBfaHtr238Q==/109951165674729204.jpg",
-      },
-    });
+    // const currentSong = ref({
+    //   id: 1812673579,
+    //   name: "等你归来",
+    //   ar: "程响",
+    //   al: {
+    //     name: "等你归来",
+    //     picUrl:
+    //       "https://p1.music.126.net/bisOFZHy6WuBBfaHtr238Q==/109951165674729204.jpg",
+    //   },
+    // });
 
+    /* 退出全屏播放 */
+    const leaveFullScreenAction = () => {
+      store.commit("player/setFullScreen", false);
+    };
     return {
-      play,
+      playing,
       progress,
       currentSong,
+
+      leaveFullScreenAction,
     };
   },
 });

@@ -2,10 +2,9 @@
 <template>
   <div class="player-wrap">
     <!-- 底部小播放器 -->
-    <mini-player :progress="progress" />
-
+    <mini-player v-if="!fullScreen" :progress="progress" />
     <!-- 全屏大播放器 -->
-    <!-- <normal-player />-->
+    <normal-player v-else />
 
     <!-- 播放器 -->
     <audio
@@ -37,6 +36,7 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
     const playing = computed(() => store.state.player.playing); // 播放或暂停状态
+    const fullScreen = computed(() => store.state.player.fullScreen); // 是否全屏播放
     const id = computed(() => store.getters["player/currentSong"].id); // 当前歌曲id
 
     const audioRef = ref(null);
@@ -88,6 +88,7 @@ export default defineComponent({
       id,
       audioRef,
       progress,
+      fullScreen,
     };
   },
 });

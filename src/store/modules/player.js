@@ -52,6 +52,11 @@ export default {
     setPlaying(state, playingValue) {
       state.playing = playingValue;
     },
+
+    /* 是否全屏播放 */
+    setFullScreen(state, isFullScreen) {
+      state.fullScreen = isFullScreen;
+    },
   },
   actions: {},
 };
