@@ -4,7 +4,14 @@
     <!-- 底部小播放器 -->
     <mini-player v-if="!fullScreen" :progress="progress" />
     <!-- 全屏大播放器 -->
-    <normal-player v-else />
+    <normal-player
+      v-else
+      :progress="progress"
+      :current-time="currentTime"
+      :duration="duration"
+      @change="handleProgressAction"
+      @touchChange="handleTouchChange"
+    />
 
     <!-- 播放器 -->
     <audio
@@ -48,6 +55,8 @@ export default defineComponent({
       const result = currentTime.value / duration.value;
       return isNaN(result) ? 0 : result;
     });
+
+    const isTouch = ref(false);
     /* ----------------------------------------------------------------------------------------------------- */
     onMounted(() => {
       audioRef.value.addEventListener("canplay", () => {
@@ -55,6 +64,9 @@ export default defineComponent({
       });
 
       audioRef.value.addEventListener("timeupdate", () => {
+        if (isTouch.value) {
+          return; // 用户在拖拽进度条, 进度条不要跟着音乐播放去更新进度
+        }
         currentTime.value = audioRef.value.currentTime; //当前播放时长
       });
     });
@@ -84,11 +96,34 @@ export default defineComponent({
       });
     });
     /* ----------------------------------------------------------------------------------------------------- */
+    /* 处理内容组件,进度的变化 */
+    const handleProgressAction = (newProgress) => {
+      // 修改currentTime属性
+      currentTime.value = duration.value * newProgress;
+    };
+
+    /* 全屏播放器的触发拖拽状态切换事件 */
+    const handleTouchChange = (flag) => {
+      if (flag === "start") {
+        isTouch.value = true;
+      } else if (flag === "end") {
+        isTouch.value = false; // 触摸停止
+        // 调整音乐播放器时间
+        audioRef.value.currentTime = currentTime.value;
+      }
+    };
+
     return {
       id,
       audioRef,
-      progress,
+      currentTime,
+      duration,
       fullScreen,
+      progress,
+      isTouch,
+
+      handleProgressAction,
+      handleTouchChange,
     };
   },
 });

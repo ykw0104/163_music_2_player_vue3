@@ -1,11 +1,14 @@
 ./* 条形进度条 */
 <template>
   <div class="bar-progress">
-    <span class="text">00:00</span>
+    <!-- 当前时长 -->
+    <span class="text">{{ formatTime(currentTime) }}</span>
+    <!-- 条形进度条 -->
     <div ref="barRef" class="bar" :style="{ backgroundImage: backgroudStyle }">
       <span ref="iconRef" class="icon"></span>
     </div>
-    <span class="text">04:00</span>
+    <!-- 总时长 -->
+    <span class="text">{{ formatTime(duration) }}</span>
   </div>
 </template>
 
@@ -22,13 +25,24 @@ import {
 export default defineComponent({
   props: {
     modelValue: Number,
+    currentTime: Number,
+    duration: Number,
   },
-  emits: ["update:modelValue"],
+  emits: ["update:modelValue", "touchstart", "touchend"],
   setup(props, { emit }) {
     const barRef = ref(null);
     const iconRef = ref(null);
 
     const maxScroll = ref(null);
+
+    const formatTime = (time) => {
+      // 计算分钟数
+      let mins = Math.floor(time / 60);
+      // 计算秒数
+      let second = Math.floor(time % 60);
+      second = second > 9 ? second : "0" + second;
+      return mins + ":" + second;
+    };
 
     onMounted(() => {
       // 调整dom, 添加移动端触发事件
@@ -39,6 +53,9 @@ export default defineComponent({
       // 添加icon的触摸事件
       icon.addEventListener("touchstart", (event) => {
         let x = maxScroll.value * props.modelValue; // 记录每一次偏移的位置
+        // 告诉外部,触摸开始
+        emit("touchstart");
+
         // 记录开始的位置
         const startX = event.changedTouches[0].clientX;
         const touchmoveCallBack = (event) => {
@@ -55,11 +72,13 @@ export default defineComponent({
 
           // 手指移动多少,让icon标签在当前的位置跟着偏移多少
           icon.style.transform = `translate(${offsetX}px,-50%)`;
-          // 计算进度的百分比
+          // 计算进度的百分比, progress = offsetX / maxScroll.value
           emit("update:modelValue", offsetX / maxScroll.value);
         };
 
         const touchendCallBack = (event) => {
+          // 告诉外部,触摸停止了
+          emit("touchend");
           // 移除监听
           document.removeEventListener("touchmove", touchmoveCallBack);
           document.removeEventListener("touchend", touchendCallBack);
@@ -96,6 +115,8 @@ export default defineComponent({
       barRef,
       iconRef,
       backgroudStyle,
+
+      formatTime,
     };
   },
 });
@@ -139,7 +160,9 @@ export default defineComponent({
   }
 
   .text {
+    width: 25px;
     margin: 0 5px;
+    text-align: cente;
     color: #666;
     font-size: 12px;
   }

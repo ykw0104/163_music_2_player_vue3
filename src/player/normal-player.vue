@@ -32,7 +32,14 @@
     <!-- 底部操作按键 -->
     <div class="bottom">
       <!-- 条形进度条 -->
-      <bar-progress v-model="progress" />
+      <bar-progress
+        :model-value="progress"
+        @update:modelValue="changeProgressAction"
+        :current-time="currentTime"
+        :duration="duration"
+        @touchstart="handelTouchAction('start')"
+        @touchend="handelTouchAction('end')"
+      />
 
       <div class="operators">
         <div class="icon i-left">
@@ -64,11 +71,16 @@ export default defineComponent({
   components: {
     BarProgress,
   },
-  setup() {
+  props: {
+    progress: Number,
+    currentTime: Number,
+    duration: Number,
+  },
+  emits: ["change", "touchChange"],
+  setup(props, { emit }) {
     const store = useStore();
-    const playing = computed(() => store.state.player.playing);
-    const currentSong = computed(() => store.getters["player/currentSong"]);
-    const progress = ref(0.7); // 进度条进度
+    const playing = computed(() => store.state.player.playing); // 播放/暂停
+    const currentSong = computed(() => store.getters["player/currentSong"]); // 当前歌曲
 
     // 当前歌曲信息
     // const currentSong = ref({
@@ -86,11 +98,24 @@ export default defineComponent({
     const leaveFullScreenAction = () => {
       store.commit("player/setFullScreen", false);
     };
+
+    /* 修改进度条进度的事件 */
+    const changeProgressAction = (progress) => {
+      // 将进度传值给父组件
+      emit("change", progress);
+    };
+
+    /* 将进度条触摸拖拽传递给外部 */
+    const handelTouchAction = (flag) => {
+      emit("touchChange", flag);
+    };
+
     return {
       playing,
-      progress,
       currentSong,
 
+      changeProgressAction,
+      handelTouchAction,
       leaveFullScreenAction,
     };
   },
