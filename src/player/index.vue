@@ -63,13 +63,22 @@ export default defineComponent({
         duration.value = audioRef.value.duration; // 在播放时, 获得音乐时长
       });
 
+      /* 播放过程中时间的更新事件 */
       audioRef.value.addEventListener("timeupdate", () => {
         if (isTouch.value) {
           return; // 用户在拖拽进度条, 进度条不要跟着音乐播放去更新进度
         }
         currentTime.value = audioRef.value.currentTime; //当前播放时长
       });
+
+      /* 监听一首歌播放结束的事件 */
+      audioRef.value.addEventListener("ended", () => {
+        // 播放模式为顺序播放: 播放下一首歌
+        // 播放模式为单曲选好: 重放当前这首歌
+        // 播放模式为随机播放: 随机歌曲列表的下一首歌
+      });
     });
+
     /* ----------------------------------------------------------------------------------------------------- */
     /* 监听播放状态的改变, 操作audio标签播放或暂停歌曲 */
     watch(playing, (newValue) => {

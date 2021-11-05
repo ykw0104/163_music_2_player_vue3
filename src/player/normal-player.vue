@@ -11,7 +11,7 @@
     <!-- 顶部 -->
     <div class="top">
       <div class="back" @click="leaveFullScreenAction">
-        <i class="iconfont icon-zuojiantou"></i>
+        <i class="iconfont icon-jiantou"></i>
       </div>
       <h1 class="title">{{ currentSong.name }}</h1>
       <h2 class="subtitle">{{ currentSong.ar }}</h2>
@@ -42,16 +42,26 @@
       />
 
       <div class="operators">
-        <div class="icon i-left">
-          <i class="iconfont icon-xunhuan"></i>
+        <!-- 播放模式 -->
+        <div class="icon i-left" @click="changePlayModeAction">
+          <i class="iconfont" :class="playModeIcon"></i>
         </div>
-        <div class="icon i-left">
+        <!-- 播放上一首 -->
+        <div class="icon i-left" @click="prevAction">
           <i class="iconfont icon-shangyishoushangyige"></i>
         </div>
-        <div class="icon i-center">
-          <i class="iconfont icon-24gl-playCircle"></i>
+        <!-- 暂停和播放 -->
+        <div class="icon i-center" @click="playChangeAction">
+          <i
+            class="iconfont"
+            :class="{
+              'icon-shipinbofangshibofang': !playing,
+              'icon-weibiaoti519': playing,
+            }"
+          ></i>
         </div>
-        <div class="icon i-right">
+        <!-- 播放下一首 -->
+        <div class="icon i-right" @click="nextAction">
           <i class="iconfont icon-xiayigexiayishou"></i>
         </div>
         <div class="icon i-right">
@@ -63,7 +73,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref, computed, watch } from "vue";
 import { useStore } from "vuex";
 import BarProgress from "@/player/children/bar-progress.vue";
 
@@ -80,19 +90,27 @@ export default defineComponent({
   setup(props, { emit }) {
     const store = useStore();
     const playing = computed(() => store.state.player.playing); // 播放/暂停
+    const mode = computed(() => store.state.player.mode); // 播放模式
     const currentSong = computed(() => store.getters["player/currentSong"]); // 当前歌曲
 
-    // 当前歌曲信息
-    // const currentSong = ref({
-    //   id: 1812673579,
-    //   name: "等你归来",
-    //   ar: "程响",
-    //   al: {
-    //     name: "等你归来",
-    //     picUrl:
-    //       "https://p1.music.126.net/bisOFZHy6WuBBfaHtr238Q==/109951165674729204.jpg",
-    //   },
-    // });
+    /* 当前播放模式的图标 */
+    const playModeIcon = computed(() => {
+      switch (mode.value) {
+        case 0:
+          return "icon-suijibofang";
+        case 1:
+          return "icon-danquxunhuan";
+        case 2:
+          return "icon-suijibofang1";
+      }
+    });
+
+    watch(mode, (newValue) => {
+      // 其他模式变为随机播放, 找到当前歌曲所在歌单的下标
+      if (newValue === 2) {
+        // 根据当前歌曲的id,找到下标
+      }
+    });
 
     /* 退出全屏播放 */
     const leaveFullScreenAction = () => {
@@ -110,13 +128,42 @@ export default defineComponent({
       emit("touchChange", flag);
     };
 
+    /* 播放暂停的点击事件 */
+    const playChangeAction = () => {
+      store.commit("player/setPlaying", !playing.value);
+    };
+
+    /* 切换播放模式 */
+    const changePlayModeAction = () => {
+      store.commit("player/changePlayMode");
+    };
+
+    /* 上一曲点击事件 */
+    const prevAction = () => {
+      // 播放模式为顺序播放: 播放上一首歌
+      // 播放模式为单曲循环: 播放顺序列表的上一首歌
+      // 播放模式为随机播放: 随机歌曲列表的上一首歌
+    };
+
+    /* 下一曲点击事件 */
+    const nextAction = () => {
+      // 播放模式为顺序播放: 播放下一首歌
+      // 播放模式为单曲循环: 播放顺序列表的下一首歌
+      // 播放模式为随机播放: 随机歌曲列表的下一首歌
+    };
     return {
       playing,
+      playModeIcon,
       currentSong,
+      mode,
 
+      changePlayModeAction,
       changeProgressAction,
       handelTouchAction,
       leaveFullScreenAction,
+      playChangeAction,
+      prevAction,
+      nextAction,
     };
   },
 });
